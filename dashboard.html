@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - HaraSweet</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard-page">
+  <nav class="navbar">
+    <div class="logo">🍰 HaraSweet</div>
+    <div class="nav-links">
+      <a href="#">Trang chủ</a>
+      <a href="#">Sản phẩm</a>
+      <a href="#">Liên hệ</a>
+    </div>
+    <div class="nav-actions">
+      <input type="text" id="search" placeholder="Tìm bánh..." />
+      <button id="cartBtn">🛒 (<span id="cartCount">0</span>)</button>
+      <button id="logoutBtn">Đăng xuất</button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <h1>Chào mừng đến với HaraSweet Bakery!</h1>
+    <p>Những chiếc bánh ngọt làm từ tình yêu và sự sáng tạo 💛</p>
+  </header>
+
+  <section class="product-section">
+    <h2>🎂 Danh sách bánh</h2>
+    <div id="productList" class="product-grid"></div>
+  </section>
+
+  <div id="cartModal" class="modal">
+    <div class="modal-content">
+      <h3>🧁 Giỏ hàng</h3>
+      <ul id="cartItems"></ul>
+      <p><strong>Tổng tiền:</strong> <span id="cartTotal">0</span>đ</p>
+      <button id="closeCart" class="btn-close">Đóng</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
