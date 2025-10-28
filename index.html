@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Đăng nhập - HaraSweet</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - Tiệm Bánh Ngọt</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="login-page">
+<body>
   <div class="login-container">
-    <h1 class="brand-title">🍮 HaraSweet</h1>
-    <p class="subtitle">Đăng nhập để vào cửa hàng bánh ngọt</p>
+    <h1>🍰 Đăng nhập Tiệm Bánh Ngọt</h1>
     <form id="loginForm">
-      <input type="text" id="username" placeholder="Tên đăng nhập" required />
-      <input type="password" id="password" placeholder="Mật khẩu" required />
+      <label for="username">Tên đăng nhập</label>
+      <input type="text" id="username" placeholder="Nhập tên người dùng" required>
+
+      <label for="password">Mật khẩu</label>
+      <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+
       <button type="submit">Đăng nhập</button>
-      <p id="error" class="error"></p>
+      <p id="message" class="error"></p>
     </form>
   </div>
 

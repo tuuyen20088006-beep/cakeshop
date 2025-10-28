@@ -1,188 +1,81 @@
-/* --- RESET --- */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  /* --- MÀU CHỦ ĐẠO --- */
-  :root {
-    --brown: #5a3825;
-    --gold: #f8d57e;
-    --light-bg: #fff9f3;
-  }
-  
-  /* --- LOGIN PAGE --- */
-  body.login-page {
-    background: linear-gradient(180deg, var(--brown), var(--gold));
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .login-container {
-    background: var(--light-bg);
-    border-radius: 16px;
-    padding: 40px;
-    width: 350px;
-    text-align: center;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
-  }
-  
-  .brand-title {
-    color: var(--brown);
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
-  
-  .subtitle {
-    color: #7a5f4b;
-    margin-bottom: 25px;
-  }
-  
-  .login-container input {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .login-container button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    background-color: var(--brown);
-    color: var(--gold);
-    font-weight: bold;
-    border-radius: 8px;
-    transition: all 0.3s;
-    cursor: pointer;
-  }
-  
-  .login-container button:hover {
-    background-color: var(--gold);
-    color: var(--brown);
-  }
-  
-  .error {
-    color: red;
-    margin-top: 10px;
-  }
-  
-  /* --- DASHBOARD PAGE --- */
-  body.dashboard-page {
-    background-color: var(--light-bg);
-    color: var(--brown);
-  }
-  
-  /* --- NAVBAR --- */
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--brown);
-    padding: 15px 40px;
-    color: var(--gold);
-  }
-  
-  .navbar .nav-links a {
-    color: var(--gold);
-    margin: 0 10px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .nav-actions input {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: none;
-  }
-  
-  .nav-actions button {
-    background: var(--gold);
-    border: none;
-    padding: 8px 12px;
-    margin-left: 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    color: var(--brown);
-    font-weight: bold;
-  }
-  
-  /* --- HERO --- */
-  .hero {
-    text-align: center;
-    padding: 50px;
-    background: var(--gold);
-    color: var(--brown);
-  }
-  
-  /* --- PRODUCT GRID --- */
-  .product-section {
-    padding: 40px;
-  }
-  
-  .product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 25px;
-  }
-  
-  .product-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    padding: 15px;
-    text-align: center;
-    transition: transform 0.3s;
-  }
-  
-  .product-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .product-card img {
-    width: 100%;
-    border-radius: 10px;
-  }
-  
-  .product-card button {
-    margin-top: 10px;
-    padding: 8px 12px;
-    border: none;
-    background: var(--brown);
-    color: var(--gold);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  .product-card button:hover {
-    background: var(--gold);
-    color: var(--brown);
-  }
-  
-  /* --- MODAL --- */
-  .modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.4);
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .modal-content {
-    background: var(--light-bg);
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    text-align: center;
-  }
-  
+/* Tone màu nâu vàng sang trọng */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #fdf6ec;
+  color: #4e342e;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Trang đăng nhập --- */
+.login-container {
+  max-width: 400px;
+  margin: 10vh auto;
+  padding: 30px;
+  background: #fffaf3;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-radius: 15px;
+  text-align: center;
+}
+
+.login-container h1 {
+  color: #6d4c41;
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #d7ccc8;
+  border-radius: 8px;
+}
+
+button {
+  background-color: #d7a86e;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #a47148;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+/* --- Dashboard --- */
+header {
+  background-color: #d7a86e;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cake-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.cake-card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.cake-card img {
+  width: 100%;
+  border-radius: 10px;
+}
