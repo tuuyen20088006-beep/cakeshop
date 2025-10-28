@@ -78,6 +78,5 @@ if (productListEl) {
       </div>
     `).join("");
   }
-
-  loadCakes();
+  
 }
