@@ -1,81 +1,180 @@
-/* Tone màu nâu vàng sang trọng */
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #fdf6ec;
-  color: #4e342e;
-  margin: 0;
-  padding: 0;
+:root {
+  --brown: #6b3e26;
+  --gold: #f7d774;
+  --cream: #fff8e7;
 }
 
-/* --- Trang đăng nhập --- */
+/* === RESET === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* === BODY CHUNG === */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--cream);
+  color: var(--brown);
+}
+
+/* === LOGIN PAGE === */
+.login-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, var(--gold), var(--cream));
+}
+
 .login-container {
-  max-width: 400px;
-  margin: 10vh auto;
-  padding: 30px;
-  background: #fffaf3;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  border-radius: 15px;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  width: 350px;
   text-align: center;
 }
 
 .login-container h1 {
-  color: #6d4c41;
+  margin-bottom: 20px;
+  color: var(--brown);
 }
 
-input {
-  width: 90%;
+.login-container label {
+  display: block;
+  text-align: left;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.login-container input {
+  width: 100%;
   padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #d7ccc8;
-  border-radius: 8px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-button {
-  background-color: #d7a86e;
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  background: var(--brown);
   color: white;
-  padding: 10px 20px;
   border: none;
-  border-radius: 10px;
-  cursor: pointer;
+  border-radius: 6px;
+  margin-top: 20px;
   font-weight: bold;
+  cursor: pointer;
   transition: background 0.3s;
 }
 
-button:hover {
-  background-color: #a47148;
+.login-container button:hover {
+  background: #8a4f2e;
 }
 
 .error {
   color: red;
   margin-top: 10px;
+  font-size: 0.9em;
 }
 
-/* --- Dashboard --- */
+/* === DASHBOARD HEADER === */
 header {
-  background-color: #d7a86e;
+  background: var(--brown);
   color: white;
-  padding: 15px 20px;
+  padding: 15px 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
-.cake-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 20px;
+header h1 {
+  font-size: 1.5rem;
 }
 
-.cake-card {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+#logoutBtn {
+  background: var(--gold);
+  color: var(--brown);
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#logoutBtn:hover {
+  background: #ffe07b;
+}
+
+/* === DASHBOARD BODY === */
+.dashboard-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 10px;
+}
+
+.products-section {
+  width: 100%;
+  max-width: 1200px;
   text-align: center;
 }
 
-.cake-card img {
+.products-section h2 {
+  color: var(--brown);
+  margin-bottom: 30px;
+}
+
+/* === GRID HIỂN THỊ 3 BÁNH MỖI HÀNG === */
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  justify-items: center;
+}
+
+@media (max-width: 900px) {
+  .product-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .product-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === CARD BÁNH === */
+.product-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
   width: 100%;
-  border-radius: 10px;
+  max-width: 320px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-card h3 {
+  margin: 10px 0 5px;
+  color: var(--brown);
+}
+
+.product-card p {
+  margin: 4px 10px 10px;
+  color: #444;
 }

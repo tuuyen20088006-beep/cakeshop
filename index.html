@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Đăng nhập - Tiệm Bánh Ngọt</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="login-body">
   <div class="login-container">
-    <h1>🍰 Đăng nhập Tiệm Bánh Ngọt</h1>
+    <h1>🍰 Đăng nhập Tiệm Bánh</h1>
     <form id="loginForm">
       <label for="username">Tên đăng nhập</label>
-      <input type="text" id="username" placeholder="Nhập tên người dùng" required>
+      <input type="text" id="username" placeholder="Nhập username..." required />
 
       <label for="password">Mật khẩu</label>
-      <input type="password" id="password" placeholder="Nhập mật khẩu" required>
+      <input type="password" id="password" placeholder="Nhập mật khẩu..." required />
 
       <button type="submit">Đăng nhập</button>
-      <p id="message" class="error"></p>
     </form>
+    <p id="loginMessage" class="error"></p>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
