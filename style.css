@@ -1,58 +1,65 @@
-/* Tone màu nâu vàng sang trọng */
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #fdf6ec;
-  color: #4e342e;
-  margin: 0;
-  padding: 0;
+/* === Tone màu chủ đạo === */
+:root {
+  --brown: #6b3e26;
+  --gold: #f5d76e;
+  --cream: #fffaf2;
 }
 
-/* --- Trang đăng nhập --- */
+/* === Body === */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background-color: var(--cream);
+  color: var(--brown);
+}
+
+/* === LOGIN PAGE === */
+.login-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, var(--gold), var(--cream));
+}
+
 .login-container {
-  max-width: 400px;
-  margin: 10vh auto;
-  padding: 30px;
-  background: #fffaf3;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  border-radius: 15px;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  width: 320px;
   text-align: center;
 }
 
 .login-container h1 {
-  color: #6d4c41;
+  color: var(--brown);
 }
 
-input {
-  width: 90%;
+.login-container input {
+  width: 100%;
   padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #d7ccc8;
-  border-radius: 8px;
+  margin: 8px 0 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
-button {
-  background-color: #d7a86e;
+.login-container button {
+  width: 100%;
+  padding: 10px;
+  background: var(--brown);
   color: white;
-  padding: 10px 20px;
   border: none;
-  border-radius: 10px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
 }
 
-button:hover {
-  background-color: #a47148;
+.login-container button:hover {
+  background: #8b4f2d;
 }
 
-.error {
-  color: red;
-  margin-top: 10px;
-}
-
-/* --- Dashboard --- */
+/* === DASHBOARD === */
 header {
-  background-color: #d7a86e;
+  background: var(--brown);
   color: white;
   padding: 15px 20px;
   display: flex;
@@ -60,22 +67,40 @@ header {
   align-items: center;
 }
 
-.cake-container {
+.products-section {
+  padding: 30px;
+}
+
+.product-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
-  padding: 20px;
 }
 
-.cake-card {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  text-align: center;
+.product-card {
+  background: var(--cream);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
 }
 
-.cake-card img {
+.product-card:hover {
+  transform: scale(1.05);
+}
+
+.product-card img {
   width: 100%;
-  border-radius: 10px;
+  height: 180px;
+  object-fit: cover;
+}
+
+.product-card h3 {
+  margin: 10px;
+  color: var(--brown);
+}
+
+.product-card p {
+  margin: 4px 10px;
+  color: #444;
 }
