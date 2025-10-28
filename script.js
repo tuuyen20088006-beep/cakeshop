@@ -1,89 +1,117 @@
-// === LOGIN LOGIC ===
+// ----- Chuyển tab đăng nhập / đăng ký -----
+const loginTab = document.getElementById("loginTab");
+const registerTab = document.getElementById("registerTab");
 const loginForm = document.getElementById("loginForm");
+const registerForm = document.getElementById("registerForm");
+
+if (loginTab && registerTab) {
+  loginTab.addEventListener("click", () => {
+    loginTab.classList.add("active");
+    registerTab.classList.remove("active");
+    loginForm.classList.add("active");
+    registerForm.classList.remove("active");
+  });
+
+  registerTab.addEventListener("click", () => {
+    registerTab.classList.add("active");
+    loginTab.classList.remove("active");
+    registerForm.classList.add("active");
+    loginForm.classList.remove("active");
+  });
+}
+
+// ----- Giả lập đăng nhập -----
 if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
+  loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
-    const loginMessage = document.getElementById("loginMessage");
+    const username = document.getElementById("loginUser").value.trim();
+    const password = document.getElementById("loginPass").value.trim();
 
-    try {
-      const res = await fetch("https://banhngot.fitlhu.com/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+    if (!username || !password) {
+      alert("Vui lòng nhập đầy đủ thông tin!");
+      return;
+    }
 
-      const data = await res.json();
-      if (data.access_token) {
-        localStorage.setItem("token", data.access_token);
-        window.location.href = "dashboard.html";
-      } else {
-        loginMessage.textContent = "Sai tên đăng nhập hoặc mật khẩu!";
-      }
-    } catch (err) {
-      loginMessage.textContent = "Lỗi kết nối đến máy chủ!";
+    // Tài khoản admin mặc định
+    if (username === "admin" && password === "12345") {
+      localStorage.setItem("role", "admin");
+      window.location.href = "dashboard.html";
+    } else {
+      localStorage.setItem("role", "user");
+      window.location.href = "dashboard.html";
     }
   });
 }
 
-// === DASHBOARD LOGIC ===
-const productListEl = document.getElementById("productList");
+// ----- Kiểm tra quyền trên dashboard -----
+const adminLink = document.getElementById("adminLink");
 const logoutBtn = document.getElementById("logoutBtn");
 
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    window.location.href = "index.html";
-  });
-}
-
-if (productListEl) {
-  loadCakes();
-}
-
-const defaultImages = [
-  "https://source.unsplash.com/600x400/?chocolate-cake",
-  "https://source.unsplash.com/600x400/?strawberry-cake",
-  "https://source.unsplash.com/600x400/?vanilla-cake",
-  "https://source.unsplash.com/600x400/?cheesecake",
-  "https://source.unsplash.com/600x400/?cupcake",
-  "https://source.unsplash.com/600x400/?matcha-cake",
-  "https://source.unsplash.com/600x400/?fruit-cake",
-  "https://source.unsplash.com/600x400/?tiramisu",
-  "https://source.unsplash.com/600x400/?bakery"
-];
-
-// === HÀM LẤY DANH SÁCH BÁNH ===
-async function loadCakes() {
-  try {
-    const res = await fetch("https://banhngot.fitlhu.com/api/cakes?page=1&limit=9");
-    const data = await res.json();
-
-    if (data.success && data.data.length > 0) {
-      renderCakes(data.data);
-    } else {
-      productListEl.innerHTML = "<p>Không có bánh nào để hiển thị.</p>";
-    }
-  } catch (err) {
-    console.error(err);
-    productListEl.innerHTML = "<p>Lỗi tải dữ liệu bánh.</p>";
+if (adminLink) {
+  const role = localStorage.getItem("role");
+  if (role === "admin") {
+    adminLink.style.display = "inline-block";
   }
 }
 
-// === HÀM HIỂN THỊ BÁNH ===
-function renderCakes(cakes) {
-  productListEl.innerHTML = cakes
-    .map(
-      (cake, i) => `
-      <div class="product-card">
-        <img src="${cake.image || defaultImages[i % defaultImages.length]}" alt="${cake.name}">
-        <h3>${cake.name}</h3>
-        <p>${cake.category}</p>
-        <p><strong>${cake.price.toLocaleString()}đ</strong></p>
-        <p>${cake.description}</p>
-      </div>
-    `
-    )
-    .join("");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("role");
+  });
+}
+
+// ----- Bảo vệ trang add-cake.html -----
+if (window.location.pathname.includes("add-cake.html")) {
+  const role = localStorage.getItem("role");
+  if (role !== "admin") {
+    alert("🚫 Bạn không có quyền truy cập trang này!");
+    window.location.href = "dashboard.html";
+  }
+}
+
+// ----- Thêm bánh mới -----
+const addCakeForm = document.getElementById("addCakeForm");
+const cakeImage = document.getElementById("cakeImage");
+const imagePreview = document.getElementById("imagePreview");
+const cakeContainer = document.getElementById("cakeContainer");
+
+if (cakeImage) {
+  cakeImage.addEventListener("change", () => {
+    const file = cakeImage.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        imagePreview.src = reader.result;
+        imagePreview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+if (addCakeForm) {
+  addCakeForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("cakeName").value;
+    const price = document.getElementById("cakePrice").value;
+    const imgSrc = imagePreview.src;
+
+    if (name && price && imgSrc) {
+      const cakeCard = document.createElement("div");
+      cakeCard.classList.add("cake-card");
+      cakeCard.innerHTML = `
+        <img src="${imgSrc}" alt="${name}">
+        <h3>${name}</h3>
+        <p>${parseInt(price).toLocaleString()}₫</p>
+      `;
+      cakeContainer.appendChild(cakeCard);
+
+      addCakeForm.reset();
+      imagePreview.style.display = "none";
+      alert("✅ Đã thêm bánh mới thành công!");
+    } else {
+      alert("Vui lòng nhập đầy đủ thông tin!");
+    }
+  });
 }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thêm bánh mới | Cake Shop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="logo-section">
+      <img src="C:\Users\HOME\Downloads\Background.png" alt="Cake Shop Logo" class="logo-small">
+      <h1>Cake Shop</h1>
+    </div>
+    <nav class="nav">
+      <a href="dashboard.html">Trang chủ</a>
+      <a href="add-cake.html" class="nav-item active">Thêm bánh</a>
+      <a href="index.html" class="logout" id="logoutBtn">Đăng xuất</a>
+    </nav>
+  </header>
+
+  <section class="add-cake-section">
+    <h2>🧁 Thêm bánh mới vào cửa hàng</h2>
+
+    <form id="addCakeForm" class="add-cake-form">
+      <label for="cakeName">Tên bánh:</label>
+      <input type="text" id="cakeName" placeholder="Nhập tên bánh..." required>
+
+      <label for="cakePrice">Giá (VNĐ):</label>
+      <input type="number" id="cakePrice" placeholder="Nhập giá..." required>
+
+      <label for="cakeImage">Hình ảnh:</label>
+      <input type="file" id="cakeImage" accept="image/*" required>
+
+      <div class="preview-container">
+        <p><b>Xem trước:</b></p>
+        <img id="imagePreview" src="" alt="Preview" class="preview-img">
+      </div>
+
+      <button type="submit" class="btn">Thêm bánh</button>
+    </form>
+
+    <div id="cakeList" class="added-cakes">
+      <h3>Bánh vừa thêm</h3>
+      <div id="cakeContainer" class="cake-grid"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 Cake Shop | Thiết kế bởi Tú Uyên 💙</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
