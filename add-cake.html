@@ -1,130 +1,97 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thêm Bánh Mới - Cake Shop</title>
+  <title>Thêm bánh mới</title>
   <link rel="stylesheet" href="style.css">
-
   <script>
-    // 🔒 Kiểm tra đăng nhập sớm
-    (function () {
-      const token = localStorage.getItem('token');
-      if (!token) window.location.replace('login.html');
+    (function() {
+      const token = localStorage.getItem("token");
+      if (!token) window.location.replace("login.html");
     })();
   </script>
 </head>
-
 <body>
-  <!-- 🧭 Navbar -->
   <nav class="navbar">
     <div class="nav-container">
       <div class="nav-logo">
-        <img src="https://cdn-icons-png.flaticon.com/512/857/857681.png" alt="Cake Logo" class="logo-img">
         <a href="index.html">🎂 Cake Shop</a>
-      </div>
-      <div class="nav-user">
-        <button onclick="window.location.href='index.html'" class="back-btn">⬅ Quay lại</button>
       </div>
     </div>
   </nav>
 
-  <!-- 🧁 Form thêm bánh -->
   <main class="main-content">
-    <h1>🍰 Thêm Bánh Mới</h1>
+    <h2>Thêm bánh mới</h2>
     <form id="addCakeForm" class="cake-form">
       <div class="form-group">
-        <label for="name">Tên bánh *</label>
-        <input type="text" id="name" name="name" required placeholder="Nhập tên bánh...">
+        <label for="name">Tên bánh</label>
+        <input id="name" required>
       </div>
-
       <div class="form-group">
-        <label for="category">Loại bánh *</label>
-        <input type="text" id="category" name="category" required placeholder="Ví dụ: Bánh ngọt, Bánh mặn...">
+        <label for="category">Loại bánh</label>
+        <input id="category" required>
       </div>
-
       <div class="form-group">
-        <label for="price">Giá (VNĐ) *</label>
-        <input type="number" id="price" name="price" min="0" required placeholder="Nhập giá bánh...">
+        <label for="price">Giá (VNĐ)</label>
+        <input type="number" id="price" required>
       </div>
-
       <div class="form-group">
-        <label for="image">Link hình ảnh *</label>
-        <input type="url" id="image" name="image" required placeholder="Dán URL ảnh bánh vào đây...">
+        <label for="image">Link ảnh (URL)</label>
+        <input type="url" id="image" placeholder="https://example.com/cake.jpg" required>
       </div>
-
       <div class="form-group">
         <label for="description">Mô tả</label>
-        <textarea id="description" name="description" rows="3" placeholder="Mô tả ngắn gọn về bánh..."></textarea>
+        <textarea id="description" rows="3"></textarea>
       </div>
-
-      <button type="submit" class="submit-btn">➕ Thêm bánh</button>
-      <div id="messageBox" class="message-box"></div>
+      <button type="submit" class="submit-btn">Thêm bánh</button>
+      <div id="message" class="message-box"></div>
     </form>
   </main>
 
   <script>
-    const API_BASE_URL = 'https://banhngot.fitlhu.com';
+    const API_BASE_URL = "https://banhngot.fitlhu.com";
+    const token = localStorage.getItem("token");
 
-    // Hàm hiển thị thông báo
-    function showMessage(msg, type = 'info') {
-      const box = document.getElementById('messageBox');
-      box.textContent = msg;
-      box.className = 'message-box ' + type;
-      box.style.display = 'block';
-    }
-
-    // Sự kiện submit form
-    document.getElementById('addCakeForm').addEventListener('submit', async (e) => {
+    document.getElementById("addCakeForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const token = localStorage.getItem('token');
-      if (!token) {
-        showMessage('Vui lòng đăng nhập trước khi thêm bánh.', 'error');
-        setTimeout(() => window.location.href = 'login.html', 1000);
-        return;
-      }
-
       const formData = {
-        name: document.getElementById('name').value.trim(),
-        category: document.getElementById('category').value.trim(),
-        price: parseInt(document.getElementById('price').value),
-        image: document.getElementById('image').value.trim(),
-        description: document.getElementById('description').value.trim()
+        name: name.value,
+        category: category.value,
+        price: parseInt(price.value),
+        image: image.value,
+        description: description.value,
       };
 
-      if (!formData.name || !formData.category || !formData.price || !formData.image) {
-        showMessage('Vui lòng nhập đầy đủ thông tin bắt buộc.', 'error');
-        return;
-      }
-
-      showMessage('Đang gửi dữ liệu...', 'loading');
+      const msg = document.getElementById("message");
+      msg.style.display = "block";
+      msg.textContent = "⏳ Đang thêm bánh...";
+      msg.className = "message-box loading";
 
       try {
         const res = await fetch(`${API_BASE_URL}/api/cakes`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(formData),
         });
-
         const data = await res.json();
+
         if (data.success) {
-          showMessage('🎉 Thêm bánh thành công!', 'success');
-          e.target.reset();
-          setTimeout(() => window.location.href = 'index.html', 1500);
+          msg.textContent = "✅ Thêm bánh thành công!";
+          msg.className = "message-box success";
+          setTimeout(() => (window.location.href = "index.html"), 1500);
         } else {
-          showMessage(data.message || 'Không thể thêm bánh. Vui lòng thử lại.', 'error');
+          msg.textContent = "❌ Không thể thêm bánh!";
+          msg.className = "message-box error";
         }
-      } catch (error) {
-        console.error('Add cake error:', error);
-        showMessage('Lỗi kết nối máy chủ. Thử lại sau!', 'error');
+      } catch {
+        msg.textContent = "⚠️ Lỗi kết nối máy chủ.";
+        msg.className = "message-box error";
       }
     });
   </script>
 </body>
-
 </html>

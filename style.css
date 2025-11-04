@@ -1,139 +1,394 @@
-body {
+/* ================================================
+   🎂 TONE CHỦ ĐẠO: NÂU – VÀNG ẤM ÁP
+   Dùng chung cho: login.html, index.html, add-cake.html
+   ================================================ */
+
+/* ----------------- RESET CSS ----------------- */
+* {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #fff8f0;
-  color: #3e2723;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-/* Navbar */
+body {
+  background: #fdf6f0;
+  color: #3e2723;
+  min-height: 100vh;
+}
+
+/* ----------------- NAVBAR ----------------- */
 .navbar {
-  background-color: #6b4226;
-  color: #fff;
+  background: #6b4226; /* nâu đậm */
+  color: white;
   padding: 12px 24px;
-  display: flex;
-  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .nav-container {
-  width: 100%;
   max-width: 1200px;
+  margin: 0 auto;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-}
-
-.logo-img {
-  width: 36px;
-  height: 36px;
-  margin-right: 8px;
-  vertical-align: middle;
+  align-items: center;
 }
 
 .nav-logo a {
-  font-size: 1.4rem;
   color: #fff8e1;
   text-decoration: none;
+  font-size: 22px;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
-/* Search */
+.logo-img {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.nav-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .nav-search input {
-  padding: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
   border: none;
-  border-radius: 4px;
+  outline: none;
+  width: 200px;
 }
 
 .nav-search button {
-  padding: 8px 12px;
   background: #d7a86e;
   border: none;
-  border-radius: 4px;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-/* User */
+.nav-search button:hover {
+  background: #ffcc80;
+  color: #4e342e;
+}
+
+.nav-user {
+  position: relative;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
 .user-avatar {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  margin-right: 8px;
+  object-fit: cover;
 }
 
 .dropdown-menu {
   display: none;
   position: absolute;
-  right: 24px;
+  right: 0;
+  top: 110%;
   background: white;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border: 1px solid #d7ccc8;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  min-width: 160px;
 }
 
 .dropdown-menu.show {
   display: block;
+  animation: fadeIn 0.2s ease;
 }
 
 .dropdown-item {
-  padding: 10px 20px;
   display: block;
-  color: #3e2723;
+  padding: 10px 14px;
   text-decoration: none;
+  color: #3e2723;
+  transition: 0.2s;
 }
 
 .dropdown-item:hover {
-  background: #ffe0b2;
+  background: #fff3e0;
 }
 
-/* Cakes grid */
+/* ----------------- MAIN CONTENT ----------------- */
 .main-content {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
+  margin: 30px auto;
   text-align: center;
+  padding: 0 20px;
 }
 
+/* ----------------- LOGIN PAGE ----------------- */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+}
+
+.login-box {
+  background: white;
+  padding: 40px 35px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-box h2 {
+  color: #5d4037;
+  margin-bottom: 20px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #d7ccc8;
+  margin-bottom: 16px;
+  background: #fffaf5;
+  font-size: 15px;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #d7a86e;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.login-box button:hover {
+  background: #6b4226;
+}
+
+.login-message {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+/* ----------------- CAKE GRID ----------------- */
 .cakes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
   justify-items: center;
 }
 
 .cake-card {
-  background: #fff;
-  border-radius: 10px;
-  overflow: hidden;
+  background: white;
+  border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+  max-width: 320px;
+  width: 100%;
 }
 
 .cake-card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.cake-img {
+.cake-thumb img {
   width: 100%;
   height: 200px;
   object-fit: cover;
 }
 
 .cake-body {
-  padding: 12px;
+  padding: 16px;
+  text-align: left;
+}
+
+.cake-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #4e342e;
+  margin-bottom: 8px;
+}
+
+.cake-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #6d4c41;
+  font-weight: 500;
+}
+
+.cake-category {
+  background: #ffe082;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 13px;
 }
 
 .cake-price {
-  color: #6b4226;
+  color: #4e342e;
   font-weight: bold;
 }
 
+/* ----------------- PAGINATION ----------------- */
 .pagination {
-  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
 }
 
 .page-btn {
   background: #d7a86e;
-  color: #fff;
   border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
+  padding: 8px 14px;
+  color: white;
+  border-radius: 6px;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.page-btn:hover {
+  background: #6b4226;
+}
+
+.page-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* ----------------- STATUS ----------------- */
+.cakes-status {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.status-loading {
+  color: #ff9800;
+}
+
+.status-error {
+  color: #b71c1c;
+}
+
+.status-empty {
+  color: #757575;
+}
+
+/* ----------------- ADD CAKE FORM ----------------- */
+.cake-form {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 600px;
+  margin: 24px auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.cake-form .form-group {
+  margin-bottom: 16px;
+}
+
+.cake-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #5d4037;
+}
+
+.cake-form input,
+.cake-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d7ccc8;
+  border-radius: 6px;
+  background: #fffaf5;
+  font-size: 15px;
+  color: #3e2723;
+}
+
+.submit-btn {
+  display: block;
+  width: 100%;
+  background: #d7a86e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.submit-btn:hover {
+  background: #6b4226;
+}
+
+.message-box {
+  margin-top: 16px;
+  padding: 10px;
+  border-radius: 6px;
+  display: none;
+  text-align: center;
+  font-weight: 500;
+}
+
+.message-box.success {
+  background: #dcedc8;
+  color: #33691e;
+}
+
+.message-box.error {
+  background: #ffcdd2;
+  color: #b71c1c;
+}
+
+.message-box.loading {
+  background: #fff9c4;
+  color: #f57f17;
+}
+
+.back-btn {
+  background: #d7a86e;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background: #6b4226;
+}
+
+/* ----------------- ANIMATIONS ----------------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }

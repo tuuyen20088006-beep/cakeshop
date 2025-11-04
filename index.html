@@ -1,194 +1,61 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cake Shop - Trang Chủ</title>
+  <title>Đăng nhập - Cake Shop</title>
   <link rel="stylesheet" href="style.css">
-  <script>
-    // 🔒 Kiểm tra token ngay khi tải trang — tránh nháy nội dung
-    (function () {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) window.location.replace('login.html');
-      } catch (e) {
-        window.location.replace('login.html');
-      }
-    })();
-  </script>
 </head>
-
 <body>
-  <!-- 🧭 Navbar -->
-  <nav class="navbar">
-    <div class="nav-container">
-      <!-- Logo -->
-      <div class="nav-logo">
-        <img src="https://cdn-icons-png.flaticon.com/512/857/857681.png" alt="Cake Logo" class="logo-img">
-        <a href="index.html">🎂 Cake Shop</a>
-      </div>
-
-      <!-- Search -->
-      <div class="nav-search">
-        <input type="text" id="searchInput" placeholder="Tìm kiếm bánh...">
-        <button type="button" id="searchBtn">🔍</button>
-      </div>
-
-      <!-- User menu -->
-      <div class="nav-user">
-        <div class="user-info" id="userInfo">
-          <img src="" alt="Avatar" id="userAvatar" class="user-avatar">
-          <span id="userName">User</span>
-          <span class="dropdown-icon">▼</span>
-        </div>
-
-        <div class="dropdown-menu" id="dropdownMenu">
-          <a href="add-cake.html" class="dropdown-item">➕ Thêm bánh</a>
-          <a href="#" class="dropdown-item">⚙️ Cài đặt</a>
-          <a href="#" class="dropdown-item" id="logoutBtn">🚪 Đăng xuất</a>
-        </div>
-      </div>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>🍰 Đăng nhập vào Cake Shop</h2>
+      <form id="loginForm">
+        <input type="text" id="username" placeholder="Tên đăng nhập" required>
+        <input type="password" id="password" placeholder="Mật khẩu" required>
+        <button type="submit">Đăng nhập</button>
+      </form>
+      <div id="loginMessage" class="login-message"></div>
     </div>
-  </nav>
-
-  <!-- 🎂 Nội dung chính -->
-  <main class="main-content">
-    <div class="cakes-header">
-      <h1>Bộ sưu tập bánh của bạn 🎂</h1>
-      <div class="cakes-toolbar">
-        <div id="totalInfo" class="total-info"></div>
-      </div>
-    </div>
-
-    <div id="cakesStatus" class="cakes-status"></div>
-
-    <div id="cakesGrid" class="cakes-grid" aria-live="polite"></div>
-
-    <div class="pagination" id="pagination" aria-label="Phân trang bánh">
-      <button id="prevPage" class="page-btn" disabled>◀ Trước</button>
-      <div id="pageInfo" class="page-info">Trang 1 / 1</div>
-      <button id="nextPage" class="page-btn" disabled>Tiếp ▶</button>
-    </div>
-  </main>
+  </div>
 
   <script>
-    const API_BASE_URL = 'https://banhngot.fitlhu.com';
-    let currentPage = 1, limit = 9, totalPages = 1;
+    const API_BASE_URL = "https://banhngot.fitlhu.com";
 
-    const cakesGrid = document.getElementById('cakesGrid');
-    const cakesStatus = document.getElementById('cakesStatus');
-    const totalInfo = document.getElementById('totalInfo');
-    const prevPageBtn = document.getElementById('prevPage');
-    const nextPageBtn = document.getElementById('nextPage');
-    const pageInfo = document.getElementById('pageInfo');
-
-    // 💡 Định dạng giá tiền VNĐ
-    const formatVND = v => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(v);
-
-    // 🧁 Hiển thị danh sách bánh
-    function renderCakes(cakes) {
-      if (!cakes || cakes.length === 0) {
-        cakesGrid.innerHTML = '';
-        cakesStatus.textContent = 'Chưa có bánh nào. Hãy thêm chiếc bánh đầu tiên của bạn!';
-        return;
-      }
-      cakesStatus.textContent = '';
-      cakesGrid.innerHTML = cakes.map(c => `
-        <div class="cake-card">
-          <img class="cake-img" src="${c.image || 'https://via.placeholder.com/400x250?text=Cake'}" 
-               alt="${c.name}" 
-               onerror="this.src='https://via.placeholder.com/400x250?text=Cake'">
-          <div class="cake-body">
-            <h3>${c.name}</h3>
-            <p class="cake-category">${c.category}</p>
-            <p class="cake-price">${formatVND(c.price)}</p>
-          </div>
-        </div>`).join('');
-    }
-
-    // 📄 Phân trang
-    function renderPagination(pagination) {
-      totalPages = pagination.totalPages || 1;
-      currentPage = pagination.page || 1;
-      pageInfo.textContent = `Trang ${currentPage} / ${totalPages}`;
-      prevPageBtn.disabled = currentPage <= 1;
-      nextPageBtn.disabled = currentPage >= totalPages;
-      totalInfo.textContent = `Tổng số: ${pagination.total} bánh`;
-    }
-
-    // 🚀 Lấy danh sách bánh
-    async function fetchCakes(page = 1) {
-      const token = localStorage.getItem('token');
-      if (!token) return window.location.replace('login.html');
-
-      cakesStatus.textContent = 'Đang tải dữ liệu...';
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/cakes/my?page=${page}&limit=${limit}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        if (data.success) {
-          renderCakes(data.data);
-          renderPagination(data.pagination);
-        } else cakesStatus.textContent = data.message || 'Không thể tải danh sách bánh.';
-      } catch (err) {
-        cakesStatus.textContent = 'Lỗi kết nối đến máy chủ.';
-      }
-    }
-
-    // 🔁 Sự kiện phân trang
-    prevPageBtn.addEventListener('click', () => currentPage > 1 && fetchCakes(currentPage - 1));
-    nextPageBtn.addEventListener('click', () => currentPage < totalPages && fetchCakes(currentPage + 1));
-
-    // 👤 Xử lý dropdown user
-    const userInfo = document.getElementById('userInfo');
-    const dropdownMenu = document.getElementById('dropdownMenu');
-    userInfo.addEventListener('click', e => {
-      e.stopPropagation();
-      dropdownMenu.classList.toggle('show');
-    });
-    document.addEventListener('click', () => dropdownMenu.classList.remove('show'));
-
-    // 🚪 Đăng xuất
-    document.getElementById('logoutBtn').addEventListener('click', e => {
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      localStorage.clear();
-      window.location.href = 'login.html';
-    });
 
-    // 🔍 Tìm kiếm
-    document.getElementById('searchBtn').addEventListener('click', async () => {
-      const q = document.getElementById('searchInput').value.trim();
-      if (!q) return fetchCakes(1);
-      const token = localStorage.getItem('token');
-      const res = await fetch(`${API_BASE_URL}/api/cakes/search?q=${encodeURIComponent(q)}&limit=9`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (data.success && data.data.length > 0) {
-        renderCakes(data.data);
-        totalInfo.textContent = `Tìm thấy ${data.data.length} kết quả`;
-      } else {
-        cakesGrid.innerHTML = '';
-        cakesStatus.textContent = 'Không tìm thấy bánh nào phù hợp.';
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const messageBox = document.getElementById("loginMessage");
+
+      messageBox.textContent = "⏳ Đang đăng nhập...";
+      messageBox.style.color = "#ff9800";
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await res.json();
+
+        if (data.success && data.token) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
+          messageBox.textContent = "✅ Đăng nhập thành công!";
+          messageBox.style.color = "green";
+          setTimeout(() => (window.location.href = "index.html"), 1200);
+        } else {
+          messageBox.textContent = data.message || "❌ Sai tên đăng nhập hoặc mật khẩu!";
+          messageBox.style.color = "red";
+        }
+      } catch (error) {
+        messageBox.textContent = "⚠️ Không thể kết nối đến máy chủ.";
+        messageBox.style.color = "red";
       }
-    });
-
-    document.getElementById('searchInput').addEventListener('keypress', e => {
-      if (e.key === 'Enter') document.getElementById('searchBtn').click();
-    });
-
-    // ⚙️ Load thông tin người dùng + bánh khi mở trang
-    window.addEventListener('load', () => {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (user) {
-        document.getElementById('userName').textContent = user.full_name || user.username;
-        document.getElementById('userAvatar').src = user.avatar || 'https://via.placeholder.com/40';
-      }
-      fetchCakes(1);
     });
   </script>
 </body>
-
 </html>

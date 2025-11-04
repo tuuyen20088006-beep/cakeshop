@@ -1,131 +1,193 @@
+// ========================== CẤU HÌNH CHUNG ==========================
 const API_BASE_URL = "https://banhngot.fitlhu.com";
 
-// ====== ĐĂNG NHẬP ======
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const error = document.getElementById("error-message");
-
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-        });
-
-        const data = await res.json();
-        if (res.ok && data.token) {
-          localStorage.setItem("token", data.token);
-          alert("Đăng nhập thành công!");
-          window.location.href = "dashboard.html";
-        } else {
-          error.textContent = data.message || "Sai tên đăng nhập hoặc mật khẩu!";
-        }
-      } catch (err) {
-        error.textContent = "Không thể kết nối tới server!";
-      }
-    });
+// ========================== HỖ TRỢ CHUNG ==========================
+function formatVND(value) {
+  try {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
+  } catch {
+    return value + " ₫";
   }
-});
-
-// ====== DASHBOARD ======
-const token = localStorage.getItem("token");
-if (window.location.pathname.includes("dashboard.html") && !token) {
-  window.location.href = "index.html";
 }
 
-const logoutBtn = document.getElementById("logoutBtn");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("token");
-    window.location.href = "index.html";
-  });
+function showMessage(message, type = "info", targetId = "message") {
+  const box = document.getElementById(targetId);
+  if (!box) return;
+  box.textContent = message;
+  box.style.display = "block";
+  box.className = `message-box ${type}`;
 }
 
-// ====== HÀM HIỂN THỊ THÔNG BÁO ======
-function showMessage(msg, type = "info") {
-  const box = document.getElementById("messageBox");
-  box.textContent = msg;
-  box.className = type;
+// ========================== ĐĂNG NHẬP ==========================
+async function handleLogin(e) {
+  e.preventDefault();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  showMessage("⏳ Đang đăng nhập...", "loading", "loginMessage");
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await res.json();
+
+    if (data.success && data.token) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      showMessage("✅ Đăng nhập thành công!", "success", "loginMessage");
+      setTimeout(() => (window.location.href = "index.html"), 1200);
+    } else {
+      showMessage(data.message || "❌ Sai thông tin đăng nhập!", "error", "loginMessage");
+    }
+  } catch (err) {
+    showMessage("⚠️ Không thể kết nối máy chủ.", "error", "loginMessage");
+  }
 }
 
-function setLoading(state) {
-  document.getElementById("loading").style.display = state ? "block" : "none";
+// ========================== ĐĂNG XUẤT ==========================
+function logoutUser() {
+  localStorage.clear();
+  window.location.href = "login.html";
 }
 
-// ====== LẤY DANH SÁCH BÁNH ======
+// ========================== LẤY DANH SÁCH BÁNH ==========================
 async function fetchCakes() {
-  const res = await fetch(`${API_BASE_URL}/api/cakes?page=1&limit=9`);
-  const data = await res.json();
-  if (data.success) renderCakes(data.data);
+  const token = localStorage.getItem("token");
+  if (!token) return logoutUser();
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/cakes?page=1&limit=9`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      renderCakes(data.data);
+    } else {
+      showMessage(data.message || "Không thể tải danh sách bánh!", "error", "cakesStatus");
+    }
+  } catch (err) {
+    showMessage("⚠️ Lỗi kết nối đến máy chủ.", "error", "cakesStatus");
+  }
 }
 
 function renderCakes(cakes) {
-  const container = document.getElementById("cakeContainer");
-  container.innerHTML = "";
-  cakes.forEach((cake) => {
-    const div = document.createElement("div");
-    div.classList.add("cake-item");
-    div.innerHTML = `
-      <img src="${cake.image}" alt="${cake.name}">
-      <h3>${cake.name}</h3>
-      <p>${cake.category}</p>
-      <p><b>${cake.price.toLocaleString()} VND</b></p>
-      <p>${cake.description}</p>
-    `;
-    container.appendChild(div);
-  });
+  const grid = document.getElementById("cakesGrid");
+  if (!grid) return;
+
+  if (!cakes || cakes.length === 0) {
+    grid.innerHTML = "<p>Chưa có bánh nào 🍞</p>";
+    return;
+  }
+
+  grid.innerHTML = cakes
+    .map(
+      (cake) => `
+      <div class="cake-card">
+        <div class="cake-thumb">
+          <img src="${cake.image || "https://via.placeholder.com/400x250?text=Cake"}" alt="${cake.name}">
+        </div>
+        <div class="cake-body">
+          <h3>${cake.name}</h3>
+          <p>${cake.description || "Không có mô tả"}</p>
+          <div class="cake-meta">
+            <span>${cake.category}</span>
+            <span>${formatVND(cake.price)}</span>
+          </div>
+        </div>
+      </div>
+    `
+    )
+    .join("");
 }
 
-// ====== THÊM BÁNH ======
-const addCakeForm = document.getElementById("addCakeForm");
-if (addCakeForm) {
-  addCakeForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+// ========================== THÊM BÁNH ==========================
+async function handleAddCake(e) {
+  e.preventDefault();
+  const token = localStorage.getItem("token");
+  if (!token) return logoutUser();
 
-    const formData = {
-      name: document.getElementById("cakeName").value.trim(),
-      category: document.getElementById("cakeCategory").value.trim(),
-      price: Number(document.getElementById("cakePrice").value),
-      image: document.getElementById("cakeImage").value.trim(),
-      description: document.getElementById("cakeDescription").value.trim(),
-    };
+  const formData = {
+    name: document.getElementById("name").value,
+    category: document.getElementById("category").value,
+    price: parseInt(document.getElementById("price").value),
+    image: document.getElementById("image").value,
+    description: document.getElementById("description").value,
+  };
 
-    if (!formData.name || !formData.category || !formData.price || formData.price <= 0) {
-      showMessage("Vui lòng điền đầy đủ thông tin bắt buộc.", "error");
-      return;
+  showMessage("⏳ Đang thêm bánh...", "loading");
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/cakes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      showMessage("✅ Thêm bánh thành công!", "success");
+      setTimeout(() => (window.location.href = "index.html"), 1500);
+    } else {
+      showMessage("❌ Không thể thêm bánh.", "error");
     }
-
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/api/cakes`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        showMessage("🎂 Thêm bánh thành công!", "success");
-        addCakeForm.reset();
-        fetchCakes();
-      } else {
-        showMessage(data.message || "Không thể thêm bánh!", "error");
-      }
-    } catch (error) {
-      showMessage("Lỗi kết nối đến máy chủ!", "error");
-    } finally {
-      setLoading(false);
-    }
-  });
-
-  fetchCakes();
+  } catch (err) {
+    showMessage("⚠️ Lỗi kết nối máy chủ.", "error");
+  }
 }
+
+// ========================== TÌM KIẾM BÁNH ==========================
+async function handleSearch() {
+  const token = localStorage.getItem("token");
+  const keyword = document.getElementById("searchInput").value.trim();
+  if (!keyword) return fetchCakes();
+
+  try {
+    const res = await fetch(
+      `${API_BASE_URL}/api/cakes/search?q=${encodeURIComponent(keyword)}&page=1&limit=9`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    const data = await res.json();
+    if (data.success) renderCakes(data.data);
+    else showMessage("Không tìm thấy bánh phù hợp.", "error", "cakesStatus");
+  } catch (err) {
+    showMessage("⚠️ Lỗi tìm kiếm.", "error", "cakesStatus");
+  }
+}
+
+// ========================== KHỞI TẠO THEO TRANG ==========================
+document.addEventListener("DOMContentLoaded", () => {
+  const path = window.location.pathname;
+
+  // Nếu đang ở trang đăng nhập
+  if (path.endsWith("login.html")) {
+    const form = document.getElementById("loginForm");
+    if (form) form.addEventListener("submit", handleLogin);
+  }
+
+  // Nếu đang ở trang dashboard
+  if (path.endsWith("index.html")) {
+    fetchCakes();
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) logoutBtn.addEventListener("click", logoutUser);
+
+    const searchBtn = document.getElementById("searchBtn");
+    if (searchBtn) searchBtn.addEventListener("click", handleSearch);
+  }
+
+  // Nếu đang ở trang thêm bánh
+  if (path.endsWith("add-cake.html")) {
+    const form = document.getElementById("addCakeForm");
+    if (form) form.addEventListener("submit", handleAddCake);
+  }
+});
