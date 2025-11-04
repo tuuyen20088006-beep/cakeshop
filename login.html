@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - Cake Shop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h2>🍰 Đăng nhập vào Cake Shop</h2>
+      <form id="loginForm">
+        <input type="text" id="username" placeholder="Tên đăng nhập" required>
+        <input type="password" id="password" placeholder="Mật khẩu" required>
+        <button type="submit">Đăng nhập</button>
+      </form>
+      <div id="loginMessage" class="login-message"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = "https://banhngot.fitlhu.com";
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const messageBox = document.getElementById("loginMessage");
+
+      messageBox.textContent = "⏳ Đang đăng nhập...";
+      messageBox.style.color = "#ff9800";
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await res.json();
+
+        if (data.success && data.token) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("user", JSON.stringify(data.user));
+          messageBox.textContent = "✅ Đăng nhập thành công!";
+          messageBox.style.color = "green";
+          setTimeout(() => (window.location.href = "index.html"), 1200);
+        } else {
+          messageBox.textContent = data.message || "❌ Sai tên đăng nhập hoặc mật khẩu!";
+          messageBox.style.color = "red";
+        }
+      } catch (error) {
+        messageBox.textContent = "⚠️ Không thể kết nối đến máy chủ.";
+        messageBox.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>

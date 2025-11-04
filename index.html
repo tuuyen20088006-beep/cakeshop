@@ -3,59 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đăng nhập - Cake Shop</title>
+  <title>Cake Shop - Trang chủ</title>
   <link rel="stylesheet" href="style.css">
+  <script>
+    // Kiểm tra đăng nhập
+    (function() {
+      const token = localStorage.getItem("token");
+      if (!token) window.location.replace("login.html");
+    })();
+  </script>
 </head>
 <body>
-  <div class="login-container">
-    <div class="login-box">
-      <h2>🍰 Đăng nhập vào Cake Shop</h2>
-      <form id="loginForm">
-        <input type="text" id="username" placeholder="Tên đăng nhập" required>
-        <input type="password" id="password" placeholder="Mật khẩu" required>
-        <button type="submit">Đăng nhập</button>
-      </form>
-      <div id="loginMessage" class="login-message"></div>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <a href="index.html">🎂 Cake Shop</a>
+      </div>
+      <div class="nav-search">
+        <input type="text" id="searchInput" placeholder="Tìm kiếm bánh...">
+        <button id="searchBtn">🔍</button>
+      </div>
+      <div class="nav-user">
+        <div class="user-info" id="userInfo">
+          <img id="userAvatar" class="user-avatar" src="https://via.placeholder.com/40">
+          <span id="userName">User</span>
+          <span class="dropdown-icon">▼</span>
+        </div>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="add-cake.html" class="dropdown-item">➕ Thêm bánh</a>
+          <a href="#" class="dropdown-item" id="logoutBtn">🚪 Đăng xuất</a>
+        </div>
+      </div>
     </div>
-  </div>
+  </nav>
+
+  <main class="main-content">
+    <h1>Bộ sưu tập bánh 🎂</h1>
+    <div id="cakesGrid" class="cakes-grid"></div>
+  </main>
 
   <script>
     const API_BASE_URL = "https://banhngot.fitlhu.com";
+    const token = localStorage.getItem("token");
 
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const messageBox = document.getElementById("loginMessage");
-
-      messageBox.textContent = "⏳ Đang đăng nhập...";
-      messageBox.style.color = "#ff9800";
-
+    async function fetchCakes() {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
+        const res = await fetch(`${API_BASE_URL}/api/cakes?page=1&limit=9`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
-
         const data = await res.json();
-
-        if (data.success && data.token) {
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          messageBox.textContent = "✅ Đăng nhập thành công!";
-          messageBox.style.color = "green";
-          setTimeout(() => (window.location.href = "index.html"), 1200);
-        } else {
-          messageBox.textContent = data.message || "❌ Sai tên đăng nhập hoặc mật khẩu!";
-          messageBox.style.color = "red";
-        }
-      } catch (error) {
-        messageBox.textContent = "⚠️ Không thể kết nối đến máy chủ.";
-        messageBox.style.color = "red";
+        if (data.success) renderCakes(data.data);
+      } catch {
+        document.getElementById("cakesGrid").innerHTML = "<p>Lỗi khi tải bánh 🍞</p>";
       }
-    });
+    }
+
+    function renderCakes(cakes) {
+      const grid = document.getElementById("cakesGrid");
+      grid.innerHTML = cakes.map(c => `
+        <div class="cake-card">
+          <div class="cake-thumb"><img src="${c.image}" alt="${c.name}"></div>
+          <div class="cake-body">
+            <h3>${c.name}</h3>
+            <p>${c.description}</p>
+            <div class="cake-meta">
+              <span>${c.category}</span>
+              <span>${c.price.toLocaleString()}đ</span>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    document.getElementById("logoutBtn").onclick = () => {
+      localStorage.clear();
+      window.location.href = "login.html";
+    };
+
+    fetchCakes();
   </script>
 </body>
 </html>
