@@ -1,39 +1,267 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cake Shop | Đăng nhập & Đăng ký</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cake Shop - Trang Chủ</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Auth guard: chạy sớm ngay khi tải trang để tránh hiển thị nháy nội dung
+        (function () {
+            try {
+                var token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.replace('login.html');
+                }
+            } catch (e) {
+                // Bỏ qua lỗi truy cập storage (ví dụ: chế độ riêng tư)
+                window.location.replace('login.html');
+            }
+        })();
+    </script>
 </head>
-<body class="auth-body">
-  <div class="auth-container">
-    <div class="auth-box">
-      <img src="images/logo.png" alt="Cake Shop Logo" class="logo">
-      <h2 class="auth-title">Chào mừng đến với Cake Shop</h2>
 
-      <div class="tab-container">
-        <button id="loginTab" class="tab active">Đăng nhập</button>
-        <button id="registerTab" class="tab">Đăng ký</button>
-      </div>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo -->
+            <div class="nav-logo">
+                <a href="index.html">🎂 Cake Shop</a>
+            </div>
 
-      <!-- Form đăng nhập -->
-      <form id="loginForm" class="form active">
-        <input type="text" id="loginUser" placeholder="Tên đăng nhập" required>
-        <input type="password" id="loginPass" placeholder="Mật khẩu" required>
-        <button type="submit" class="btn">Đăng nhập</button>
-      </form>
+            <!-- Search Bar -->
+            <div class="nav-search">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm bánh...">
+                <button type="button" id="searchBtn">🔍</button>
+            </div>
 
-      <!-- Form đăng ký -->
-      <form id="registerForm" class="form">
-        <input type="text" id="regUser" placeholder="Tên người dùng" required>
-        <input type="email" id="regEmail" placeholder="Email" required>
-        <input type="password" id="regPass" placeholder="Mật khẩu" required>
-        <button type="submit" class="btn">Đăng ký</button>
-      </form>
-    </div>
-  </div>
+            <!-- User Menu -->
+            <div class="nav-user">
+                <div class="user-info" id="userInfo">
+                    <img src="" alt="Avatar" id="userAvatar" class="user-avatar">
+                    <span id="userName">User</span>
+                    <span class="dropdown-icon">▼</span>
+                </div>
 
-  <script src="script.js"></script>
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="add-cake.html" class="dropdown-item">
+                        <span>➕</span> Thêm bánh
+                    </a>
+                    <a href="#" class="dropdown-item">
+                        <span>⚙️</span> Cài đặt
+                    </a>
+                    <a href="#" class="dropdown-item" id="logoutBtn">
+                        <span>🚪</span> Đăng xuất
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="cakes-header">
+            <h1>Bộ sưu tập bánh của bạn 🎂</h1>
+            <div class="cakes-toolbar">
+                <div id="totalInfo" class="total-info"></div>
+            </div>
+        </div>
+
+        <div id="cakesStatus" class="cakes-status"></div>
+
+        <div id="cakesGrid" class="cakes-grid" aria-live="polite"></div>
+
+        <div class="pagination" id="pagination" aria-label="Phân trang bánh">
+            <button id="prevPage" class="page-btn" disabled aria-label="Trang trước">◀ Trước</button>
+            <div id="pageInfo" class="page-info">Trang 1 / 1</div>
+            <button id="nextPage" class="page-btn" disabled aria-label="Trang sau">Tiếp ▶</button>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE_URL = 'https://banhngot.fitlhu.com';
+
+        // Khởi tạo hiển thị thông tin người dùng (token đã được kiểm tra sớm ở <head>)
+        window.addEventListener('load', function () {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user) {
+                document.getElementById('userName').textContent = user.full_name || user.username;
+                const avatar = user.avatar || 'https://via.placeholder.com/40';
+                document.getElementById('userAvatar').src = avatar;
+            }
+            // Tải danh sách bánh lần đầu
+            fetchAndRenderCakes(1);
+        });
+
+        // ----------------------- Cakes Listing with Pagination -----------------------
+        let currentPage = 1;
+        const limit = 12; // khoảng 12 bánh mỗi trang
+        let totalPages = 1;
+
+        const cakesGrid = document.getElementById('cakesGrid');
+        const cakesStatus = document.getElementById('cakesStatus');
+        const totalInfo = document.getElementById('totalInfo');
+        const prevPageBtn = document.getElementById('prevPage');
+        const nextPageBtn = document.getElementById('nextPage');
+        const pageInfo = document.getElementById('pageInfo');
+
+        function formatVND(value) {
+            try {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+            } catch (e) {
+                return value + ' VND';
+            }
+        }
+
+        function setStatus(message, type = 'info') {
+            cakesStatus.textContent = message || '';
+            cakesStatus.className = 'cakes-status ' + (type ? 'status-' + type : '');
+        }
+
+        function renderCakes(cakes) {
+            if (!cakes || cakes.length === 0) {
+                cakesGrid.innerHTML = '';
+                setStatus('Bạn chưa có bánh nào. Hãy thêm chiếc bánh đầu tiên của bạn!', 'empty');
+                return;
+            }
+            setStatus('');
+            const html = cakes.map(c => {
+                const img = c.image && typeof c.image === 'string' ? c.image : '';
+                const safeImg = img && /^https?:\/\//.test(img) ? img : 'https://via.placeholder.com/400x250?text=Cake';
+                const price = typeof c.price === 'number' ? c.price : parseFloat(c.price) || 0;
+                return `
+                <div class="cake-card">
+                    <div class="cake-thumb">
+                        <img src="${safeImg}" alt="${c.name || 'Bánh'}" onerror="this.src='https://via.placeholder.com/400x250?text=Cake'">
+                    </div>
+                    <div class="cake-body">
+                        <h3 class="cake-title" title="${c.name || ''}">${c.name || 'Không tên'}</h3>
+                        <div class="cake-meta">
+                            <span class="cake-category">${c.category || 'khác'}</span>
+                            <span class="cake-price">${formatVND(price)}</span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            cakesGrid.innerHTML = html;
+        }
+
+        function renderPagination(pagination) {
+            if (!pagination) return;
+            totalPages = Math.max(1, pagination.totalPages || 1);
+            currentPage = Math.min(Math.max(1, pagination.page || 1), totalPages);
+            pageInfo.textContent = `Trang ${currentPage} / ${totalPages}`;
+            prevPageBtn.disabled = currentPage <= 1;
+            nextPageBtn.disabled = currentPage >= totalPages;
+            // Tổng số
+            if (pagination.total != null) {
+                totalInfo.textContent = `Tổng số: ${pagination.total} bánh`;
+            } else {
+                totalInfo.textContent = '';
+            }
+        }
+
+        async function fetchAndRenderCakes(page = 1) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // Phòng hờ nếu token thiếu (đã có guard ở <head>)
+                window.location.replace('login.html');
+                return;
+            }
+
+            setStatus('Đang tải dữ liệu...', 'loading');
+            cakesGrid.innerHTML = '';
+
+            try {
+                const url = new URL(`${API_BASE_URL}/api/cakes/my`);
+                url.searchParams.set('page', String(page));
+                url.searchParams.set('limit', String(limit));
+
+                const res = await fetch(url.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const json = await res.json();
+                if (!json.success) {
+                    setStatus(json.message || 'Không thể tải danh sách bánh.', 'error');
+                    // Nếu lỗi do token, đưa về login
+                    if (/token/i.test(json.message || '')) {
+                        setTimeout(() => window.location.replace('login.html'), 800);
+                    }
+                    return;
+                }
+
+                renderCakes(json.data || []);
+                renderPagination(json.pagination || { page: page, totalPages: 1 });
+            } catch (err) {
+                console.error('Fetch cakes error:', err);
+                setStatus('Lỗi kết nối đến máy chủ. Vui lòng thử lại.', 'error');
+            }
+        }
+
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                fetchAndRenderCakes(currentPage - 1);
+            }
+        });
+
+        nextPageBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                fetchAndRenderCakes(currentPage + 1);
+            }
+        });
+
+        // Toggle dropdown menu
+        const userInfo = document.getElementById('userInfo');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        userInfo.addEventListener('click', function (e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+
+        // Đóng dropdown khi click bên ngoài
+        document.addEventListener('click', function () {
+            dropdownMenu.classList.remove('show');
+        });
+
+        // Xử lý đăng xuất
+        document.getElementById('logoutBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Xóa thông tin từ localStorage
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+
+            // Redirect về trang login
+            window.location.href = 'login.html';
+        });
+
+        // Xử lý tìm kiếm
+        document.getElementById('searchBtn').addEventListener('click', function () {
+            const searchValue = document.getElementById('searchInput').value;
+            if (searchValue.trim()) {
+                console.log('Tìm kiếm:', searchValue);
+                // Thêm logic tìm kiếm ở đây
+            }
+        });
+
+        // Tìm kiếm khi nhấn Enter
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                document.getElementById('searchBtn').click();
+            }
+        });
+    </script>
 </body>
+
 </html>
