@@ -1,394 +1,83 @@
-/* ================================================
-   🎂 TONE CHỦ ĐẠO: NÂU – VÀNG ẤM ÁP
-   Dùng chung cho: login.html, index.html, add-cake.html
-   ================================================ */
+/* =========================
+   Cake Shop - Blue & White
+   Shared styles for pages
+   ========================= */
 
-/* ----------------- RESET CSS ----------------- */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
-}
-
+/* Reset-ish */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html,body { height: 100%; }
 body {
-  background: #fdf6f0;
-  color: #3e2723;
-  min-height: 100vh;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg,#f7fbff,#ffffff);
+  color: #0f1724; /* dark slate */
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-/* ----------------- NAVBAR ----------------- */
-.navbar {
-  background: #6b4226; /* nâu đậm */
-  color: white;
-  padding: 12px 24px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
+/* Utilities */
+.centered { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
+.card { background:white; border-radius:12px; box-shadow:0 8px 30px rgba(15,23,36,0.06); padding:24px; max-width:420px; width:100%; }
 
-.nav-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nav-logo a {
-  color: #fff8e1;
-  text-decoration: none;
-  font-size: 22px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-}
-
-.logo-img {
-  width: 32px;
-  height: 32px;
-  margin-right: 8px;
-}
-
-.nav-search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.nav-search input {
-  padding: 8px 10px;
-  border-radius: 6px;
+/* Buttons */
+.btn {
   border: none;
-  outline: none;
-  width: 200px;
-}
-
-.nav-search button {
-  background: #d7a86e;
-  border: none;
+  background: #2563eb; /* blue-600 */
   color: white;
   padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
 }
+.btn:hover { filter:brightness(0.95); }
+.btn.outline { background:transparent; color:#2563eb; border:1px solid #dbeafe; }
+.btn.danger { background:#ef4444; }
 
-.nav-search button:hover {
-  background: #ffcc80;
-  color: #4e342e;
+/* Login page */
+.brand-logo { width:72px; height:72px; display:block; margin: 0 auto 12px; }
+.brand-title { text-align:center; margin-bottom:8px; font-size:1.6rem; color:#0f1724; }
+.form { display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+.form input[type="text"], .form input[type="password"], .search-input {
+  padding:10px 12px; border-radius:8px; border:1px solid #e6eefc; background:#fbfdff;
 }
+.form label { font-size:0.9rem; color:#0f1724; font-weight:600; }
+.form-message { margin-top:10px; min-height:20px; font-weight:600; text-align:center; }
+.muted { color:#64748b; }
 
-.nav-user {
-  position: relative;
+/* Topbar / Dashboard */
+.topbar { background:#ffffff; border-bottom:1px solid #eef2ff; position:sticky; top:0; z-index:50; }
+.topbar-inner { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:12px 16px; }
+.brand { display:flex; align-items:center; gap:10px; }
+.logo-small { width:36px; height:36px; border-radius:8px; object-fit:cover; }
+.brand-name { color:#0f1724; font-weight:700; text-decoration:none; font-size:1.05rem; }
+.toolbar { display:flex; align-items:center; gap:10px; }
+.search-input { padding:8px 10px; border-radius:8px; border:1px solid #e6eefc; width:220px; }
+
+/* Main content */
+.main-content { max-width:1100px; margin:28px auto; padding:0 16px 60px; }
+.dashboard-header { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+.grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; }
+
+/* Card for cake */
+.cake-card { background:white; border-radius:12px; overflow:hidden; box-shadow: 0 6px 18px rgba(2,6,23,0.06); display:flex; flex-direction:column; }
+.cake-img { width:100%; height:180px; object-fit:cover; display:block; }
+.cake-body { padding:12px 14px; flex:1; display:flex; flex-direction:column; gap:8px; }
+.cake-title { font-size:1.05rem; font-weight:700; color:#0f1724; }
+.cake-desc { color:#475569; font-size:0.95rem; flex:1; }
+.cake-meta { display:flex; justify-content:space-between; align-items:center; margin-top:10px; color:#0f1724; font-weight:700; }
+
+/* status / pagination */
+.status { margin:16px 0; text-align:center; color:#2563eb; font-weight:600; }
+.pagination { display:flex; justify-content:center; align-items:center; gap:12px; margin-top:18px; }
+.page-info { font-weight:600; color:#475569; }
+
+/* Responsive */
+@media (max-width: 980px) {
+  .grid { grid-template-columns:repeat(2, 1fr); }
+  .search-input { width:160px; }
 }
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 6px 10px;
-  border-radius: 8px;
-}
-
-.user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.dropdown-menu {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 110%;
-  background: white;
-  border: 1px solid #d7ccc8;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  min-width: 160px;
-}
-
-.dropdown-menu.show {
-  display: block;
-  animation: fadeIn 0.2s ease;
-}
-
-.dropdown-item {
-  display: block;
-  padding: 10px 14px;
-  text-decoration: none;
-  color: #3e2723;
-  transition: 0.2s;
-}
-
-.dropdown-item:hover {
-  background: #fff3e0;
-}
-
-/* ----------------- MAIN CONTENT ----------------- */
-.main-content {
-  max-width: 1200px;
-  margin: 30px auto;
-  text-align: center;
-  padding: 0 20px;
-}
-
-/* ----------------- LOGIN PAGE ----------------- */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-}
-
-.login-box {
-  background: white;
-  padding: 40px 35px;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-  max-width: 400px;
-  width: 100%;
-}
-
-.login-box h2 {
-  color: #5d4037;
-  margin-bottom: 20px;
-}
-
-.login-box input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #d7ccc8;
-  margin-bottom: 16px;
-  background: #fffaf5;
-  font-size: 15px;
-}
-
-.login-box button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  background: #d7a86e;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.login-box button:hover {
-  background: #6b4226;
-}
-
-.login-message {
-  text-align: center;
-  margin-top: 10px;
-  font-weight: 500;
-}
-
-/* ----------------- CAKE GRID ----------------- */
-.cakes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 24px;
-  margin-top: 24px;
-  justify-items: center;
-}
-
-.cake-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-  overflow: hidden;
-  max-width: 320px;
-  width: 100%;
-}
-
-.cake-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.cake-thumb img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.cake-body {
-  padding: 16px;
-  text-align: left;
-}
-
-.cake-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #4e342e;
-  margin-bottom: 8px;
-}
-
-.cake-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #6d4c41;
-  font-weight: 500;
-}
-
-.cake-category {
-  background: #ffe082;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 13px;
-}
-
-.cake-price {
-  color: #4e342e;
-  font-weight: bold;
-}
-
-/* ----------------- PAGINATION ----------------- */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.page-btn {
-  background: #d7a86e;
-  border: none;
-  padding: 8px 14px;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.page-btn:hover {
-  background: #6b4226;
-}
-
-.page-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-/* ----------------- STATUS ----------------- */
-.cakes-status {
-  text-align: center;
-  margin-top: 10px;
-  font-weight: 500;
-}
-
-.status-loading {
-  color: #ff9800;
-}
-
-.status-error {
-  color: #b71c1c;
-}
-
-.status-empty {
-  color: #757575;
-}
-
-/* ----------------- ADD CAKE FORM ----------------- */
-.cake-form {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 600px;
-  margin: 24px auto;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  text-align: left;
-}
-
-.cake-form .form-group {
-  margin-bottom: 16px;
-}
-
-.cake-form label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #5d4037;
-}
-
-.cake-form input,
-.cake-form textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #d7ccc8;
-  border-radius: 6px;
-  background: #fffaf5;
-  font-size: 15px;
-  color: #3e2723;
-}
-
-.submit-btn {
-  display: block;
-  width: 100%;
-  background: #d7a86e;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 12px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.submit-btn:hover {
-  background: #6b4226;
-}
-
-.message-box {
-  margin-top: 16px;
-  padding: 10px;
-  border-radius: 6px;
-  display: none;
-  text-align: center;
-  font-weight: 500;
-}
-
-.message-box.success {
-  background: #dcedc8;
-  color: #33691e;
-}
-
-.message-box.error {
-  background: #ffcdd2;
-  color: #b71c1c;
-}
-
-.message-box.loading {
-  background: #fff9c4;
-  color: #f57f17;
-}
-
-.back-btn {
-  background: #d7a86e;
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.back-btn:hover {
-  background: #6b4226;
-}
-
-/* ----------------- ANIMATIONS ----------------- */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+  .topbar-inner { padding:10px; flex-direction:column; align-items:flex-start; gap:8px; }
+  .toolbar { width:100%; justify-content:flex-start; gap:8px; }
+  .search-input { width:100%; }
 }
