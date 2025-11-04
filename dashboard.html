@@ -1,113 +1,40 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cake Shop Dashboard</title>
+  <title>Dashboard - Tiệm Bánh Ngọt</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="header">
-    <div class="logo-section">
-      <img src="images/logo.png" alt="Cake Shop Logo" class="logo-small">
-      <h1>Cake Shop</h1>
+  <header class="navbar">
+    <div class="logo">
+      <img src="https://i.ibb.co/zrbSNYn/logo-cake.png" alt="Logo Tiệm Bánh">
+      <h1>Tiệm Bánh Ngọt</h1>
     </div>
-    <nav class="nav">
-      <a href="#" class="nav-item active">Trang chủ</a>
-      <a href="#">Sản phẩm</a>
-      <a href="add-cake.html" id="adminLink" style="display:none;">Thêm bánh</a>
-      <a href="index.html" class="logout" id="logoutBtn">Đăng xuất</a>
-    </nav>
+    <button id="logoutBtn">Đăng xuất</button>
   </header>
 
-  <section class="banner">
-    <h2>Ngọt ngào mỗi ngày 💙</h2>
-    <p>Thưởng thức hương vị tinh tế từ những chiếc bánh được làm bằng tình yêu và nghệ thuật.</p>
-  </section>
+  <main>
+    <section class="add-cake">
+      <h2>➕ Thêm bánh mới</h2>
+      <form id="addCakeForm">
+        <input type="text" id="cakeName" placeholder="Tên bánh" required>
+        <input type="text" id="cakeCategory" placeholder="Loại bánh" required>
+        <input type="number" id="cakePrice" placeholder="Giá (VND)" required>
+        <input type="url" id="cakeImage" placeholder="URL hình ảnh" required>
+        <textarea id="cakeDescription" placeholder="Mô tả bánh..." required></textarea>
+        <button type="submit">Thêm bánh</button>
+      </form>
+      <div id="messageBox"></div>
+      <div id="loading" class="loading">⏳ Đang xử lý...</div>
+    </section>
 
-  <section class="cake-list">
-    <h2 class="section-title">Các loại bánh nổi bật</h2>
-    <div class="cake-grid">
-      <div class="cake-card">
-        <img src="images/cake1.jpg" alt="Bánh kem dâu">
-        <h3>Bánh kem dâu</h3>
-        <p>35.000₫</p>
-      </div>
-
-      <div class="cake-card">
-        <img src="images/cake2.jpg" alt="Bánh socola">
-        <h3>Bánh socola</h3>
-        <p>40.000₫</p>
-      </div>
-
-      <div class="cake-card">
-        <img src="images/cake3.jpg" alt="Cupcake vani">
-        <h3>Cupcake vani</h3>
-        <p>25.000₫</p>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <p>© 2025 Cake Shop | Thiết kế bởi Tú Uyên 💙</p>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cake Shop Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header class="header">
-    <div class="logo-section">
-      <img src="images/logo.png" alt="Cake Shop Logo" class="logo-small">
-      <h1>Cake Shop</h1>
-    </div>
-    <nav class="nav">
-      <a href="#" class="nav-item active">Trang chủ</a>
-      <a href="#">Sản phẩm</a>
-      <a href="add-cake.html" id="adminLink" style="display:none;">Thêm bánh</a>
-      <a href="index.html" class="logout" id="logoutBtn">Đăng xuất</a>
-    </nav>
-  </header>
-
-  <section class="banner">
-    <h2>Ngọt ngào mỗi ngày 💙</h2>
-    <p>Thưởng thức hương vị tinh tế từ những chiếc bánh được làm bằng tình yêu và nghệ thuật.</p>
-  </section>
-
-  <section class="cake-list">
-    <h2 class="section-title">Các loại bánh nổi bật</h2>
-    <div class="cake-grid">
-      <div class="cake-card">
-        <img src="images/cake1.jpg" alt="Bánh kem dâu">
-        <h3>Bánh kem dâu</h3>
-        <p>35.000₫</p>
-      </div>
-
-      <div class="cake-card">
-        <img src="images/cake2.jpg" alt="Bánh socola">
-        <h3>Bánh socola</h3>
-        <p>40.000₫</p>
-      </div>
-
-      <div class="cake-card">
-        <img src="images/cake3.jpg" alt="Cupcake vani">
-        <h3>Cupcake vani</h3>
-        <p>25.000₫</p>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <p>© 2025 Cake Shop | Thiết kế bởi Tú Uyên 💙</p>
-  </footer>
+    <section class="cake-list">
+      <h2>Danh sách bánh 🍩</h2>
+      <div id="cakeContainer" class="cake-grid"></div>
+    </section>
+  </main>
 
   <script src="script.js"></script>
 </body>
