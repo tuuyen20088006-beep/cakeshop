@@ -8,8 +8,8 @@
 html,body { height: 100%; }
 body {
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  background: linear-gradient(180deg,#f7fbff,#ffffff);
-  color: #0f1724; /* dark slate */
+  background: linear-gradient(180deg,#176cd4,#ffffff);
+  color: #ffffff; /* dark slate */
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
@@ -30,7 +30,7 @@ body {
 }
 .btn:hover { filter:brightness(0.95); }
 .btn.outline { background:transparent; color:#2563eb; border:1px solid #dbeafe; }
-.btn.danger { background:#ef4444; }
+.btn.danger { background:#2563eb; }
 
 /* Login page */
 .brand-logo { width:72px; height:72px; display:block; margin: 0 auto 12px; }
